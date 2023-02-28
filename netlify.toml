@@ -1,0 +1,4 @@
+[[redirects]]
+  from = “/*”
+  to = “https://api.securecheckout.com/:splat"
+  status = 200
