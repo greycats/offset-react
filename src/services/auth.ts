@@ -57,8 +57,9 @@ export async function loginUserWithCreds(
   email: string,
   password: string
 ): Promise<UserInfo> {
-  const authenticateResponse = await fetch(`${BASE_URL}/v1/account/authenticate`, {
+  const authenticateResponse = await fetch(`/v1/account/authenticate`, {
     method: "POST",
+    mode: "cors",
     headers: {
       "Content-Type": "application/json",
     },
@@ -75,7 +76,7 @@ export async function loginUserWithCreds(
   const userInfo = (await authenticateResponse.json()) as UserInfo;
 
   // Commented this because CORS is not enabled on the server
-  const authTokenRes = await fetch(`${BASE_URL}/v1/account/authorize`, {
+  const authTokenRes = await fetch(`/v1/account/authorize`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
