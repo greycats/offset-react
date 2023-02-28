@@ -2,7 +2,6 @@
   "name": "offset-react",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://private-anon-89863d609d-figurecommerce.apiary-proxy.com",
   "dependencies": {
     "@babel/core": "7.16.0",
     "@babel/runtime": "^7.16.3",

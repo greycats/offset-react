@@ -1,6 +1,13 @@
 import { useState } from "react";
 
-const BASE_URL = process.env.REACT_APP_SERVER_URL;
+const BASE_URL = process.env.REACT_APP_AUTH_SERVER_URL;
+
+interface Account {
+  id: string;
+  name: string;
+  app: string;
+  account: string;
+}
 
 export interface UserInfo {
   profile: {
@@ -9,7 +16,10 @@ export interface UserInfo {
     first_name: string;
     last_name: string;
     phone: string;
+    created: string;
+    require_2fa: string;
   };
+  accounts: Record<string, Account>;
   ticket: string;
   token?: string;
 }
@@ -65,23 +75,23 @@ export async function loginUserWithCreds(
   const userInfo = (await authenticateResponse.json()) as UserInfo;
 
   // Commented this because CORS is not enabled on the server
-  // const authTokenRes = await fetch(`${BASE_URL}/v1/account/authorize`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     ticket: userInfo.ticket,
-  //     account: 'figureapi',
-  //   }),
-  // });
-  
-  // if (!authTokenRes.ok) {
-  //   throw new Error("Authentication failed");
-  // }
+  const authTokenRes = await fetch(`${BASE_URL}/v1/account/authorize`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ticket: userInfo.ticket,
+      account: "dev", // TODO: hardcoded for now until know how to chose account
+    }),
+  });
 
-  // const { token } = await authTokenRes.json() as { token: string };
-  // userInfo.token = token;
+  if (!authTokenRes.ok) {
+    throw new Error("Authentication failed");
+  }
+
+  const { token } = (await authTokenRes.json()) as { token: string; account: Account };
+  userInfo.token = token;
 
   return userInfo;
 }

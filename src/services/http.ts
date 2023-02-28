@@ -7,7 +7,7 @@ import axios, {
 } from "axios";
 import { UserInfo } from "./auth";
 
-const BASE_URL = process.env.REACT_APP_SERVER_URL;
+const BASE_URL = process.env.REACT_APP_AUTH_SERVER_URL;
 
 enum StatusCode {
   Unauthorized = 401,
@@ -17,21 +17,19 @@ enum StatusCode {
 }
 
 const headers: Readonly<Record<string, string | boolean>> = {
-  Accept: "application/json",
   "Content-Type": "application/json",
-  "Access-Control-Allow-Credentials": true,
-  "X-Requested-With": "XMLHttpRequest",
 };
 
 // We can use the following function to inject the JWT token through an interceptor
 // We get the `accessToken` from the localStorage that we set when we authenticate
 const injectToken = (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
   try {
-    const userInfoStr = localStorage.getItem("token");
+    const userInfoStr = sessionStorage.getItem("token");
+    console.log("userInfoStr", userInfoStr);
 
     if (userInfoStr != null && config.headers) {
       const userInfo = JSON.parse(userInfoStr) as UserInfo;
-      config.headers["X-Auth-Token"] = userInfo.ticket;
+      config.headers["X-Auth-Token"] = userInfo.token;
     }
     return config;
   } catch (error) {
