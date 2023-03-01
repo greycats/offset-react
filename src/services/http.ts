@@ -46,7 +46,6 @@ class Http {
 
   initHttp() {
     const http = axios.create({
-      baseURL: BASE_URL,
       headers,
       withCredentials: true,
     });

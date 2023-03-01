@@ -31,7 +31,7 @@ export function useToken() {
       return null;
     }
     const userToken = JSON.parse(tokenString) as UserInfo;
-    return userToken.ticket;
+    return userToken.token || null;
   };
 
   const [token, setToken] = useState(getToken());
