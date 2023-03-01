@@ -17,15 +17,19 @@ import { Box, Flex, Heading } from "@chakra-ui/layout";
 import { Customer, searchCustomers } from "../../services/customers";
 
 const Dashboard = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [input, setInput] = useState<string>("");
 
   const loadCustomers = useCallback(async (query?: Record<string, string>) => {
     try {
+      setIsLoading(true);
       const customers = await searchCustomers({ ...query });
       setCustomers(customers);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -47,7 +51,7 @@ const Dashboard = () => {
   }, [loadCustomers]);
 
   return (
-    <Flex h="100vh" direction={"column"}>
+    <Flex h="calc(100vh - 70px)" direction={"column"}>
       <Box>
         <Heading m={4}>Customer Search</Heading>
         <Box m={4}>
@@ -61,7 +65,7 @@ const Dashboard = () => {
                 placeholder="Name..."
               />
             </FormControl>
-            <Button width="full" mt={4} type="submit">
+            <Button isLoading={isLoading} width="full" mt={4} type="submit">
               Search
             </Button>
           </form>
